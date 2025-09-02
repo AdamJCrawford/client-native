@@ -180,16 +180,121 @@ func parseRuntimeServers(output string) (models.RuntimeServers, error) {
 }
 
 func parseRuntimeServer(line string) *models.RuntimeServer {
+	// be_id 0
+	// be_name 1
+	// srv_id 2
+	// srv_name 3
+	// srv_addr 4
+	// srv_op_state 5
+	// srv_admin_state 6
+	// srv_uweight 7
+	// srv_iweight 8
+	// srv_time_since_last_change 9
+	// srv_check_status 10
+	// srv_check_result 11
+	// srv_check_health 12
+	// srv_check_state 13
+	// srv_agent_state 14
+	// bk_f_forced_id 15
+	// srv_f_forced_id 16
+	// srv_fqdn 17
+	// srv_port 18
+	// srvrecord 19
+	// srv_use_ssl 20
+	// srv_check_port 21
+	// srv_check_addr 22
+	// srv_agent_addr 23
+	// srv_agent_port 24
 	fields := strings.Split(line, " ")
 
-	if len(fields) < 19 {
+	if len(fields) < 25 {
 		return nil
+	}
+
+	bID, err := strconv.ParseInt(fields[0], 10, 64)
+	var backendID *int64
+	if err == nil {
+		backendID = &bID
+	}
+
+	uW, err := strconv.ParseInt(fields[7], 10, 64)
+	var uWeight *int64
+	if err == nil {
+		uWeight = &uW
+	}
+
+	iW, err := strconv.ParseInt(fields[8], 10, 64)
+	var iWeight *int64
+	if err == nil {
+		iWeight = &iW
+	}
+
+	lTC, err := strconv.ParseInt(fields[9], 10, 64)
+	var lastTimeChange *int64
+	if err == nil {
+		lastTimeChange = &lTC
+	}
+
+	cStatus, err := strconv.ParseInt(fields[10], 10, 64)
+	var checkStatus *int64
+	if err == nil {
+		checkStatus = &cStatus
+	}
+
+	cResult, err := strconv.ParseInt(fields[11], 10, 64)
+	var checkResult *int64
+	if err == nil {
+		checkResult = &cResult
+	}
+
+	cHealth, err := strconv.ParseInt(fields[12], 10, 64)
+	var checkHealth *int64
+	if err == nil {
+		checkHealth = &cHealth
+	}
+
+	cState, err := strconv.ParseInt(fields[13], 10, 64)
+	var checkState *int64
+	if err == nil {
+		checkState = &cState
+	}
+
+	aState, err := strconv.ParseInt(fields[14], 10, 64)
+	var agentState *int64
+	if err == nil {
+		agentState = &aState
+	}
+
+	bFID, err := strconv.ParseInt(fields[15], 10, 64)
+	var backendForcedID *int64
+	if err == nil {
+		backendForcedID = &bFID
+	}
+
+	fID, err := strconv.ParseInt(fields[16], 10, 64)
+	var forcedID *int64
+	if err == nil {
+		forcedID = &fID
 	}
 
 	p, err := strconv.ParseInt(fields[18], 10, 64)
 	var port *int64
 	if err == nil {
 		port = &p
+	}
+
+	useSSL, _ := strconv.ParseBool(fields[20])
+
+	cPort, err := strconv.ParseInt(fields[21], 10, 64)
+	var checkPort *int64
+	if err == nil {
+		checkPort = &cPort
+	}
+
+	aPort, err := strconv.ParseInt(fields[24], 10, 64)
+	var agentPort *int64
+	if err == nil {
+		agentPort = &aPort
 	}
 
 	admState, _ := misc.GetServerAdminState(fields[6])
@@ -205,11 +310,30 @@ func parseRuntimeServer(line string) *models.RuntimeServer {
 	}
 
 	return &models.RuntimeServer{
+		BackendID:        backendID,
+		BackendName:      fields[1],
+		ID:               fields[2],
 		Name:             fields[3],
 		Address:          fields[4],
-		Port:             port,
-		ID:               fields[2],
 		AdminState:       admState,
 		OperationalState: opState,
+		Uweight:          uWeight,
+		Iweight:          iWeight,
+		LastTimeChange:   lastTimeChange,
+		CheckStatus:      checkStatus,
+		CheckResult:      checkResult,
+		CheckHealth:      checkHealth,
+		CheckState:       checkState,
+		AgentState:       agentState,
+		BackendForcedID:  backendForcedID,
+		ForecedID:        forcedID,
+		Fqdn:             fields[17],
+		Port:             port,
+		Srvrecord:        fields[19],
+		UseSsl:           useSSL,
+		CheckPort:        checkPort,
+		CheckAddr:        fields[22],
+		AgentAddr:        fields[23],
+		AgentPort:        agentPort,
 	}
 }
