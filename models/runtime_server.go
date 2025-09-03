@@ -33,7 +33,7 @@ import (
 // RuntimeServer Runtime Server
 //
 // Runtime transient server properties
-// Example: {"address":"127.0.0.5","admin_state":"ready","agent_addr":"/health","agent_port":80,"agent_state":1,"backend_forced_id":1,"backend_id":2,"backend_name":"servers","check_addr":"/health","check_health":1,"check_port":80,"check_result":1,"check_state":1,"check_status":1,"forced_id":1,"fqdn":"server.com","id":1,"iweight":1,"last_time_change":1,"name":"web1","operational_state":"up","port":80,"srvrecord":"server","use_ssl":true,"uweight":1}
+// Example: {"address":"142.250.191.142","admin_state":"ready","agent_addr":"127.0.0.1","agent_port":80,"agent_state":0,"backend_forced_id":0,"backend_id":2,"backend_name":"myservers","check_addr":"142.250.191.143","check_health":0,"check_port":80,"check_result":2,"check_state":6,"check_status":17,"forced_id":0,"fqdn":"server.com","id":1,"iweight":1,"last_time_change":123,"name":"server1","operational_state":"up","port":80,"srvrecord":"_server","use_ssl":false,"uweight":1}
 //
 // swagger:model runtime_server
 type RuntimeServer struct {

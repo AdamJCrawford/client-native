@@ -127,6 +127,12 @@ func (s *SingleRuntime) SetServerAgentSend(backend, server string, send string) 
 	return s.Execute(cmd)
 }
 
+// SetServerSSL set SSL for server
+func (s *SingleRuntime) SetServerSSL(backend, server string, ssl string) error {
+	cmd := fmt.Sprintf("set server %s/%s ssl %s", backend, server, ssl)
+	return s.Execute(cmd)
+}
+
 // GetServersState returns servers runtime state
 func (s *SingleRuntime) GetServersState(backend string) (models.RuntimeServers, error) {
 	cmd := "show servers state " + backend
@@ -180,31 +186,6 @@ func parseRuntimeServers(output string) (models.RuntimeServers, error) {
 }
 
 func parseRuntimeServer(line string) *models.RuntimeServer {
-	// be_id 0
-	// be_name 1
-	// srv_id 2
-	// srv_name 3
-	// srv_addr 4
-	// srv_op_state 5
-	// srv_admin_state 6
-	// srv_uweight 7
-	// srv_iweight 8
-	// srv_time_since_last_change 9
-	// srv_check_status 10
-	// srv_check_result 11
-	// srv_check_health 12
-	// srv_check_state 13
-	// srv_agent_state 14
-	// bk_f_forced_id 15
-	// srv_f_forced_id 16
-	// srv_fqdn 17
-	// srv_port 18
-	// srvrecord 19
-	// srv_use_ssl 20
-	// srv_check_port 21
-	// srv_check_addr 22
-	// srv_agent_addr 23
-	// srv_agent_port 24
 	fields := strings.Split(line, " ")
 
 	if len(fields) < 25 {
@@ -216,6 +197,18 @@ func parseRuntimeServer(line string) *models.RuntimeServer {
 	if err == nil {
 		backendID = &bID
 	}
+
+	var opState string
+	switch fields[5] {
+	case "0":
+		opState = "down"
+	case "3":
+		opState = "stopping"
+	case "1", "2":
+		opState = "up"
+	}
+
+	admState, _ := misc.GetServerAdminState(fields[6])
 
 	uW, err := strconv.ParseInt(fields[7], 10, 64)
 	var uWeight *int64
@@ -295,18 +288,6 @@ func parseRuntimeServer(line string) *models.RuntimeServer {
 	var agentPort *int64
 	if err == nil {
 		agentPort = &aPort
-	}
-
-	admState, _ := misc.GetServerAdminState(fields[6])
-
-	var opState string
-	switch fields[5] {
-	case "0":
-		opState = "down"
-	case "3":
-		opState = "stopping"
-	case "1", "2":
-		opState = "up"
 	}
 
 	return &models.RuntimeServer{

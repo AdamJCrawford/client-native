@@ -102,29 +102,29 @@ server:
       readOnly: true
   example:
     backend_id: 2
-    backend_name: servers
+    backend_name: myservers
     id: 1
-    name: web1
-    address: 127.0.0.5
+    name: server1
+    address: 142.250.191.142
     operational_state: up
     admin_state: ready
     uweight: 1
     iweight: 1
-    last_time_change: 1
-    check_status: 1
-    check_result: 1
-    check_health: 1
-    check_state: 1
-    agent_state: 1
-    backend_forced_id: 1
-    forced_id: 1
+    last_time_change: 123
+    check_status: 17
+    check_result: 2
+    check_health: 0
+    check_state: 6
+    agent_state: 0
+    backend_forced_id: 0
+    forced_id: 0
     fqdn: server.com
     port: 80
-    srvrecord: server
-    use_ssl: true
+    srvrecord: _server
+    use_ssl: false
     check_port: 80
-    check_addr: /health
-    agent_addr: /health
+    check_addr: 142.250.191.143
+    agent_addr: 127.0.0.1
     agent_port: 80
 add_server:
   title: Runtime Add Server
