@@ -9745,7 +9745,7 @@ definitions:
       name: server1
       operational_state: up
       port: 80
-      srvrecord: _server
+      srvrecord: _myservice._tcp.example.local
       use_ssl: false
       uweight: 1
     properties:
@@ -9846,6 +9846,7 @@ definitions:
         readOnly: true
         type: string
       use_ssl:
+        readOnly: true
         type: boolean
       uweight:
         readOnly: true

@@ -99,7 +99,7 @@ func TestRuntimeServerEqualFalse(t *testing.T) {
 		result.Iweight = Ptr(*sample.Iweight + 1)
 		result.LastTimeChange = Ptr(*sample.LastTimeChange + 1)
 		result.Port = Ptr(*sample.Port + 1)
-		result.UseSsl = !sample.UseSsl
+		result.UseSsl = Ptr(!*sample.UseSsl)
 		result.Uweight = Ptr(*sample.Uweight + 1)
 		samples = append(samples, struct {
 			a, b RuntimeServer
@@ -193,7 +193,7 @@ func TestRuntimeServerDiffFalse(t *testing.T) {
 		result.Iweight = Ptr(*sample.Iweight + 1)
 		result.LastTimeChange = Ptr(*sample.LastTimeChange + 1)
 		result.Port = Ptr(*sample.Port + 1)
-		result.UseSsl = !sample.UseSsl
+		result.UseSsl = Ptr(!*sample.UseSsl)
 		result.Uweight = Ptr(*sample.Uweight + 1)
 		samples = append(samples, struct {
 			a, b RuntimeServer

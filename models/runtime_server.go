@@ -33,7 +33,7 @@ import (
 // RuntimeServer Runtime Server
 //
 // Runtime transient server properties
-// Example: {"address":"142.250.191.142","admin_state":"ready","agent_addr":"127.0.0.1","agent_port":80,"agent_state":0,"backend_forced_id":0,"backend_id":2,"backend_name":"myservers","check_addr":"142.250.191.143","check_health":0,"check_port":80,"check_result":2,"check_state":6,"check_status":17,"forced_id":0,"fqdn":"server.com","id":1,"iweight":1,"last_time_change":123,"name":"server1","operational_state":"up","port":80,"srvrecord":"_server","use_ssl":false,"uweight":1}
+// Example: {"address":"142.250.191.142","admin_state":"ready","agent_addr":"127.0.0.1","agent_port":80,"agent_state":0,"backend_forced_id":0,"backend_id":2,"backend_name":"myservers","check_addr":"142.250.191.143","check_health":0,"check_port":80,"check_result":2,"check_state":6,"check_status":17,"forced_id":0,"fqdn":"server.com","id":1,"iweight":1,"last_time_change":123,"name":"server1","operational_state":"up","port":80,"srvrecord":"_myservice._tcp.example.local","use_ssl":false,"uweight":1}
 //
 // swagger:model runtime_server
 type RuntimeServer struct {
@@ -146,7 +146,8 @@ type RuntimeServer struct {
 	Srvrecord string `json:"srvrecord,omitempty"`
 
 	// use ssl
-	UseSsl bool `json:"use_ssl,omitempty"`
+	// Read Only: true
+	UseSsl *bool `json:"use_ssl,omitempty"`
 
 	// uweight
 	// Read Only: true
@@ -425,6 +426,10 @@ func (m *RuntimeServer) ContextValidate(ctx context.Context, formats strfmt.Regi
 		res = append(res, err)
 	}
 
+	if err := m.contextValidateUseSsl(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateUweight(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -618,6 +623,15 @@ func (m *RuntimeServer) contextValidatePort(ctx context.Context, formats strfmt.
 func (m *RuntimeServer) contextValidateSrvrecord(ctx context.Context, formats strfmt.Registry) error {
 
 	if err := validate.ReadOnly(ctx, "srvrecord", "body", string(m.Srvrecord)); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *RuntimeServer) contextValidateUseSsl(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := validate.ReadOnly(ctx, "use_ssl", "body", m.UseSsl); err != nil {
 		return err
 	}
 

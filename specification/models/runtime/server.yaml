@@ -82,6 +82,7 @@ server:
       readOnly: true
     use_ssl:
       type: boolean
+      readOnly: true
     check_port:
       type: integer
       x-nullable: true
@@ -120,7 +121,7 @@ server:
     forced_id: 0
     fqdn: server.com
     port: 80
-    srvrecord: _server
+    srvrecord: _myservice._tcp.example.local
     use_ssl: false
     check_port: 80
     check_addr: 142.250.191.143

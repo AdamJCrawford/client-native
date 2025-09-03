@@ -116,7 +116,7 @@ func (s RuntimeServer) Equal(t RuntimeServer, opts ...Options) bool {
 		return false
 	}
 
-	if s.UseSsl != t.UseSsl {
+	if !equalPointers(s.UseSsl, t.UseSsl) {
 		return false
 	}
 
@@ -227,8 +227,8 @@ func (s RuntimeServer) Diff(t RuntimeServer, opts ...Options) map[string][]inter
 		diff["Srvrecord"] = []interface{}{s.Srvrecord, t.Srvrecord}
 	}
 
-	if s.UseSsl != t.UseSsl {
-		diff["UseSsl"] = []interface{}{s.UseSsl, t.UseSsl}
+	if !equalPointers(s.UseSsl, t.UseSsl) {
+		diff["UseSsl"] = []interface{}{ValueOrNil(s.UseSsl), ValueOrNil(t.UseSsl)}
 	}
 
 	if !equalPointers(s.Uweight, t.Uweight) {
